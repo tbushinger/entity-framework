@@ -111,16 +111,144 @@ class Maybe<T> implements Serializeable<T>, Disposable {
   }
 }
 
-const none = None.create();
-const some = Some.create<string>('hello');
-console.log(Maybe.create().toJS());
-console.log(Maybe.create(null).toJS());
-console.log(Maybe.create(some).toJS());
-console.log(Maybe.create(none).toJS());
-console.log(Maybe.create<string>('Hello 2').toJS());
-console.log(Maybe.create(none).isNone());
-console.log(Maybe.create(some).isSome());
-console.log(Maybe.create(some).isSome());
-const maybe = Maybe.create(some);
-maybe.dispose();
-console.log(maybe.isSome());
+type EntityMapValues<T> = {
+  [key: string]: Maybe<T>;
+};
+
+type EntityMapIteratee<T> = (value: Maybe<T>, key: string) => any;
+
+class EntityMap<T> implements Serializeable<T>, Disposable {
+  #values: EntityMapValues<T> | undefined;
+
+  private constructor(values: EntityMapValues<T> = {}) {
+    this.#values = values;
+  }
+
+  public forEach(iteratee: EntityMapIteratee<T>): void {
+    const values = this.#values as EntityMapValues<T>;
+    const keys = Object.keys(values);
+    const len = keys.length;
+    let pos = 0;
+
+    while (pos < len) {
+      const key = keys[pos];
+      const value = values[key];
+
+      if (iteratee(value, key) === false) {
+        return;
+      }
+
+      pos++;
+    }
+  }
+
+  public toJS(): any {
+    const result: any = {};
+    this.forEach((value, key) => {
+      result[key] = value.toJS();
+    });
+
+    return result;
+  }
+
+  public isDisposed(): boolean {
+    return this.#values === undefined;
+  }
+
+  public dispose(): void {
+    if (this.isDisposed()) {
+      return;
+    }
+
+    this.forEach((value, key) => {
+      value.dispose();
+      this.#values[key] = undefined;
+    });
+
+    this.#values = undefined;
+  }
+
+  public static create<T>(values: EntityMapValues<T> = {}): EntityMap<T> {
+    return new EntityMap(values);
+  }
+}
+
+type EntityListValues<T> = Maybe<T>[];
+
+type EntityListIteratee<T> = (value: Maybe<T>, index: number) => any;
+
+class EntityList<T> implements Serializeable<T>, Disposable {
+  #values: EntityListValues<T> | undefined;
+
+  private constructor(values: EntityListValues<T> = []) {
+    this.#values = values;
+  }
+
+  public forEach(iteratee: EntityListIteratee<T>): void {
+    const values = this.#values as EntityListValues<T>;
+    const len = values.length;
+    let pos = 0;
+
+    while (pos < len) {
+      const value = values[pos];
+
+      if (iteratee(value, pos) === false) {
+        return;
+      }
+
+      pos++;
+    }
+  }
+
+  public toJS(): any {
+    const result: any[] = [];
+    this.forEach((value, idx) => {
+      result[idx] = value.toJS();
+    });
+
+    return result;
+  }
+
+  public isDisposed(): boolean {
+    return this.#values === undefined;
+  }
+
+  public dispose(): void {
+    if (this.isDisposed()) {
+      return;
+    }
+
+    this.forEach((value, idx) => {
+      value.dispose();
+      this.#values[idx] = undefined;
+    });
+
+    this.#values = undefined;
+  }
+
+  public static create<T>(values: EntityListValues<T> = []): EntityList<T> {
+    return new EntityList(values);
+  }
+}
+
+const entityMap = EntityMap.create<string>({
+  A: Maybe.create('A'),
+  B: Maybe.create('B'),
+  C: Maybe.create(),
+});
+
+console.log(entityMap.toJS());
+entityMap.dispose();
+
+const entityList = EntityList.create<string>([
+  Maybe.create('A'),
+  Maybe.create('B'),
+  Maybe.create(),
+]);
+
+console.log(entityList.toJS());
+entityList.dispose();
+
+// Iterfaces
+// Types
+// Metadata
