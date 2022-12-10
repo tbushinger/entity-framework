@@ -7,26 +7,10 @@ import { ValueList, ValueMap, Maybe } from './src/values';
 //const appDiv: HTMLElement = document.getElementById('app');
 //appDiv.innerHTML = `<h1>TypeScript Starter</h1>`;
 
-const valueMap = ValueMap.create<string>({
-  A: Maybe.create('A'),
-  B: Maybe.create('B'),
-  C: Maybe.create(),
-});
-
-console.log(valueMap.toJS());
-valueMap.dispose();
-
-const valueList = ValueList.create<string>([
-  Maybe.create('A'),
-  Maybe.create('B'),
-  Maybe.create(),
-]);
-
-console.log(valueList.toJS());
-valueList.dispose();
+const valueA = Maybe.create<string>('A');
 
 const valueMixed = ValueMap.create<any>({
-  A: Maybe.create('A'),
+  A: valueA,
   list: ValueList.create<any>([
     Maybe.create<string>('My test'),
     ValueMap.create<any>({
@@ -37,10 +21,13 @@ const valueMixed = ValueMap.create<any>({
   ]),
 });
 
+console.log(valueA.set('AA').toJS());
+console.log(valueA.setIn(undefined, 'A'));
+console.log(valueA.get().toJS());
+console.log(valueA.getIn(undefined).toJS());
 console.log(valueMixed.toJS());
 valueMixed.dispose();
 
-// copyOnWrite (setIn)
-// read (getIn)
+// Rename MaybeInput, AnyValue
 // Types
 // Metadata

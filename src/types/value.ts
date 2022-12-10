@@ -1,10 +1,14 @@
-import { Disposable, Serializeable } from './common';
+import { Disposable, Readable, Serializeable, Writable } from './common';
 
 export interface INone extends Serializeable<null>, Disposable {}
 export interface ISome<T> extends Serializeable<T>, Disposable {}
 export type MaybeInput<T> = T | null | undefined | ISome<T> | INone;
 
-export interface IMaybe<T> extends Serializeable<T>, Disposable {
+export interface IMaybe<T>
+  extends Serializeable<T>,
+    Disposable,
+    Writable<MaybeInput<T>>,
+    Readable<ISome<T> | INone> {
   isSome: () => boolean;
   isNone: () => boolean;
 }
@@ -17,7 +21,11 @@ export type ValueMapValues<T> = {
 
 export type ValueMapIteratee<T> = (value: ValueAny<T>, key: string) => any;
 
-export interface IValueMap<T> extends Serializeable<T>, Disposable {
+export interface IValueMap<T>
+  extends Serializeable<T>,
+    Disposable,
+    Writable<MaybeInput<T> | ValueAny<T>>,
+    Readable<ValueAny<T>> {
   forEach: (iteratee: ValueMapIteratee<T>) => void;
 }
 

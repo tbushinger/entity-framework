@@ -1,4 +1,6 @@
+import { Path } from '../types/common';
 import { IMaybe, INone, ISome, MaybeInput } from '../types/value';
+import { convertScalarValue } from './utils';
 
 export class None implements INone {
   #value: any = null;
@@ -55,18 +57,16 @@ export class Some<T> implements ISome<T> {
 }
 
 export class Maybe<T> implements IMaybe<T> {
-  #value: ISome<T> | None;
+  #value: ISome<T> | INone;
 
   private constructor(value?: MaybeInput<T>) {
-    if (value === null || value === undefined) {
-      this.#value = None.create();
-    } else if (value instanceof Some) {
-      this.#value = value;
-    } else if (value instanceof None) {
-      this.#value = value;
-    } else {
-      this.#value = Some.create(value);
-    }
+    this._setValue(value);
+  }
+
+  private _setValue(value?: MaybeInput<T>): Maybe<T> {
+    this.#value = convertScalarValue(value);
+
+    return this;
   }
 
   public static create<T>(value?: MaybeInput<T>) {
@@ -93,5 +93,25 @@ export class Maybe<T> implements IMaybe<T> {
     if (!this.isDisposed()) {
       this.#value = None.create();
     }
+  }
+
+  public hasPath(): boolean {
+    return true;
+  }
+
+  public set(value: MaybeInput<T>): Maybe<T> {
+    return this._setValue(value);
+  }
+
+  public setIn(_path: Path, value: MaybeInput<T>): Maybe<T> {
+    return this._setValue(value);
+  }
+
+  public get(): ISome<T> | INone {
+    return this.#value;
+  }
+
+  public getIn(_path: Path): ISome<T> | INone {
+    return this.#value;
   }
 }
