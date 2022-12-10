@@ -1,4 +1,4 @@
-import { ValueList, ValueMap } from '.';
+import { Maybe, ValueList, ValueMap } from '.';
 import { Path, PathSegments } from '../types/common';
 import {
   INone,
@@ -27,7 +27,7 @@ export function convertAny(value: any): any {
   return convertScalarValue(value);
 }
 
-export function convertScalarValue<T>(value?: MaybeInput<T>): ISome<T> | INone {
+export function convertScalarValue<T>(value?: any): ISome<T> | INone {
   if (value === null || value === undefined) {
     return None.create();
   } else if (value instanceof Some) {
@@ -64,18 +64,24 @@ export function convertList<T>(values?: any): ValueListValues<T> {
   return values.map(convertAny);
 }
 
-export function toPath(path: Path | null | undefined): PathSegments {
+export function toPath(path?: Path): Maybe<PathSegments> {
   if (path === undefined || path === null) {
-    return [];
+    return Maybe.create(undefined);
   }
 
   if (Array.isArray(path)) {
-    return path;
+    return Maybe.create<PathSegments>(path.length ? path : undefined);
   }
 
-  const segments = path.split(/\./);
+  if (!isNaN(path as any)) {
+    return Maybe.create<PathSegments>([path]);
+  }
 
-  return segments.map((segment: any) =>
+  const segments = (path as string).split(/\./);
+
+  const segmentList = segments.map((segment: any) =>
     isNaN(segment) ? segment : parseInt(segment, 2)
   );
+
+  return Maybe.create<PathSegments>(segmentList);
 }

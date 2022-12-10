@@ -11,16 +11,9 @@ export type PathSegment = string | number;
 
 export type PathSegments = PathSegment[];
 
-export type Path = PathSegment | PathSegments | undefined | null;
+export type Path = PathSegment | PathSegments;
 
-export interface Writable<T> {
-  set: (value: T) => any;
-  setIn: (path: Path, value: T) => any;
-  hasPath: () => boolean;
-}
-
-export interface Readable<T> {
-  get: () => T;
-  getIn: (path: Path) => T;
-  hasPath: () => boolean;
+export interface Traversable {
+  getIn: (path: Path) => any;
+  setIn: (value: any, path?: Path) => any;
 }

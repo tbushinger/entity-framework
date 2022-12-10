@@ -1,6 +1,6 @@
 import { Path } from '../types/common';
 import { IMaybe, INone, ISome, MaybeInput } from '../types/value';
-import { convertScalarValue } from './utils';
+import { convertAny } from './utils';
 
 export class None implements INone {
   #value: any = null;
@@ -13,6 +13,10 @@ export class None implements INone {
     }
 
     return this.instance;
+  }
+
+  public unwrap(): null {
+    return this.#value;
   }
 
   public toJS(): null {
@@ -41,8 +45,13 @@ export class Some<T> implements ISome<T> {
     return new Some<T>(value);
   }
 
-  public toJS(): any {
+  public unwrap(): T {
     return this.#value;
+  }
+
+  public toJS(): any {
+    const value: any = this.#value;
+    return value && value.toJS ? value.toJS() : value;
   }
 
   public isDisposed(): boolean {
@@ -51,6 +60,11 @@ export class Some<T> implements ISome<T> {
 
   public dispose(): void {
     if (!this.isDisposed()) {
+      const value: any = this.#value;
+      if (value && value.dispose) {
+        value.dispose();
+      }
+
       this.#value = undefined;
     }
   }
@@ -64,7 +78,7 @@ export class Maybe<T> implements IMaybe<T> {
   }
 
   private _setValue(value?: MaybeInput<T>): Maybe<T> {
-    this.#value = convertScalarValue(value);
+    this.#value = convertAny(value);
 
     return this;
   }
@@ -79,6 +93,10 @@ export class Maybe<T> implements IMaybe<T> {
 
   public isNone(): boolean {
     return this.#value instanceof None;
+  }
+
+  public unwrap(): T {
+    return this.#value.unwrap();
   }
 
   public toJS(): any {
@@ -99,19 +117,11 @@ export class Maybe<T> implements IMaybe<T> {
     return true;
   }
 
-  public set(value: MaybeInput<T>): Maybe<T> {
+  public setIn(value: MaybeInput<T>, _path?: Path): Maybe<T> {
     return this._setValue(value);
   }
 
-  public setIn(_path: Path, value: MaybeInput<T>): Maybe<T> {
-    return this._setValue(value);
-  }
-
-  public get(): ISome<T> | INone {
-    return this.#value;
-  }
-
-  public getIn(_path: Path): ISome<T> | INone {
+  public getIn(_path?: Path): ISome<T> | INone {
     return this.#value;
   }
 }
