@@ -11,7 +11,7 @@ export type PathSegment = string | number;
 
 export type PathSegments = PathSegment[];
 
-export type Path = string | PathSegments | undefined | null;
+export type Path = PathSegment | PathSegments | undefined | null;
 
 export interface Writable<T> {
   set: (value: T) => any;

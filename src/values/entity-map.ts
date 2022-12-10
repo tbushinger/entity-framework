@@ -1,4 +1,4 @@
-import { Path } from '../types/common';
+import { Path, PathSegment, Readable, Writable } from '../types/common';
 import {
   ValueMapIteratee,
   ValueMapValues,
@@ -70,19 +70,28 @@ export class ValueMap<T> implements IValueMap<T> {
   }
 
   public set(values: MaybeInput<T> | ValueAny<T>): ValueMap<T> {
-    return this._setValues(values);  
+    return this._setValues(values);
   }
 
-  public setIn(path: Path, value: MaybeInput<T>|ValueAny<T>): ValueMap<T> {
+  public setIn(path: Path, value: MaybeInput<T> | ValueAny<T>): ValueMap<T> {
     const segments = toPath(path);
-    let target: Writeable<T> = this;
+    let target: any = this;
     while (segments.length) {
       const segement = segments.shift();
       if (!segement) {
-        (target.
+        break;
+      }
+
+      target = (target as Readable<T>).getIn(segement);
+
+      if (segments.length && !target) {
+        throw new Error(`Path not found: ${path}`);
       }
     }
-    
+
+    // HERE
+    (target as Writable<T>).set(value);
+
     return this;
   }
   //get: () => ValueAny<T>;
