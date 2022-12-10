@@ -1,35 +1,35 @@
 // Import stylesheets
 //import './style.css';
 
-import { EntityList, EntityMap, Maybe } from './src/entities';
+import { ValueList, ValueMap, Maybe } from './src/values';
 
 // Write TypeScript code!
 //const appDiv: HTMLElement = document.getElementById('app');
 //appDiv.innerHTML = `<h1>TypeScript Starter</h1>`;
 
-const entityMap = EntityMap.create<string>({
+const valueMap = ValueMap.create<string>({
   A: Maybe.create('A'),
   B: Maybe.create('B'),
   C: Maybe.create(),
 });
 
-console.log(entityMap.toJS());
-entityMap.dispose();
+console.log(valueMap.toJS());
+valueMap.dispose();
 
-const entityList = EntityList.create<string>([
+const valueList = ValueList.create<string>([
   Maybe.create('A'),
   Maybe.create('B'),
   Maybe.create(),
 ]);
 
-console.log(entityList.toJS());
-entityList.dispose();
+console.log(valueList.toJS());
+valueList.dispose();
 
-const entityMixed = EntityMap.create<any>({
+const valueMixed = ValueMap.create<any>({
   A: Maybe.create('A'),
-  list: EntityList.create<any>([
+  list: ValueList.create<any>([
     Maybe.create<string>('My test'),
-    EntityMap.create<any>({
+    ValueMap.create<any>({
       a: Maybe.create<number>(1),
       b: Maybe.create<number>(2),
     }),
@@ -37,8 +37,8 @@ const entityMixed = EntityMap.create<any>({
   ]),
 });
 
-console.log(entityMixed.toJS());
-entityMixed.dispose();
+console.log(valueMixed.toJS());
+valueMixed.dispose();
 
 // copyOnWrite (setIn)
 // read (getIn)

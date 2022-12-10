@@ -1,18 +1,14 @@
-import {
-  EntityListIteratee,
-  EntityListValues,
-  IEntityList,
-} from '../types/entity';
+import { ValueListIteratee, ValueListValues, IValueList } from '../types/value';
 
-export class EntityList<T> implements IEntityList<T> {
-  #values: EntityListValues<T> | undefined;
+export class ValueList<T> implements IValueList<T> {
+  #values: ValueListValues<T> | undefined;
 
-  private constructor(values: EntityListValues<T> = []) {
+  private constructor(values: ValueListValues<T> = []) {
     this.#values = values;
   }
 
-  public forEach(iteratee: EntityListIteratee<T>): void {
-    const values = this.#values as EntityListValues<T>;
+  public forEach(iteratee: ValueListIteratee<T>): void {
+    const values = this.#values as ValueListValues<T>;
     const len = values.length;
     let pos = 0;
 
@@ -53,7 +49,7 @@ export class EntityList<T> implements IEntityList<T> {
     this.#values = undefined;
   }
 
-  public static create<T>(values: EntityListValues<T> = []): EntityList<T> {
-    return new EntityList(values);
+  public static create<T>(values: ValueListValues<T> = []): ValueList<T> {
+    return new ValueList(values);
   }
 }

@@ -1,18 +1,14 @@
-import {
-  EntityMapIteratee,
-  EntityMapValues,
-  IEntityMap,
-} from '../types/entity';
+import { ValueMapIteratee, ValueMapValues, IValueMap } from '../types/value';
 
-export class EntityMap<T> implements IEntityMap<T> {
-  #values: EntityMapValues<T> | undefined;
+export class ValueMap<T> implements IValueMap<T> {
+  #values: ValueMapValues<T> | undefined;
 
-  private constructor(values: EntityMapValues<T> = {}) {
+  private constructor(values: ValueMapValues<T> = {}) {
     this.#values = values;
   }
 
-  public forEach(iteratee: EntityMapIteratee<T>): void {
-    const values = this.#values as EntityMapValues<T>;
+  public forEach(iteratee: ValueMapIteratee<T>): void {
+    const values = this.#values as ValueMapValues<T>;
     const keys = Object.keys(values);
     const len = keys.length;
     let pos = 0;
@@ -55,7 +51,7 @@ export class EntityMap<T> implements IEntityMap<T> {
     this.#values = undefined;
   }
 
-  public static create<T>(values: EntityMapValues<T> = {}): EntityMap<T> {
-    return new EntityMap(values);
+  public static create<T>(values: ValueMapValues<T> = {}): ValueMap<T> {
+    return new ValueMap(values);
   }
 }

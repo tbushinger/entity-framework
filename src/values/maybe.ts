@@ -1,4 +1,4 @@
-import { IMaybe, INone, ISome, MaybeInput } from '../types/entity';
+import { IMaybe, INone, ISome, MaybeInput } from '../types/value';
 
 export class None implements INone {
   #value: any = null;
