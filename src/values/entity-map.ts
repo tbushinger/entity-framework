@@ -1,3 +1,4 @@
+/*
 import { Maybe } from '.';
 import {
   Path,
@@ -89,29 +90,8 @@ export class ValueMap<T> implements IValueMap<T> {
       : (target as Traversable).getIn(rest);
   }
 
-  /*
-  public setIn(value: any): ValueMap<T> {
-    const [first, ...rest] = toPath(path);
-    if (!first) {
-      throw new Error('Path not found!');
-    }
-
-    const target: any = this.#values[first];
-    if (!target && rest && rest.length) {
-      throw new Error(`Path not found: ${path}`);
-    }
-
-    if (rest && rest.length) {
-      (target as Writable<any>).setIn(rest, value);
-    } else {
-      this.#values[first] = convertAny(value);
-    }
-
-    return this;
-  }
-  */
-
   public static create<T>(values?: any): ValueMap<T> {
     return new ValueMap(values);
   }
 }
+*/

@@ -1,5 +1,5 @@
-export interface Serializeable<T> {
-  toJS: () => T;
+export interface Serializeable {
+  toJS: () => any;
 }
 
 export interface Disposable {

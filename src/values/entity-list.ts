@@ -1,3 +1,4 @@
+/*
 import { ValueListIteratee, ValueListValues, IValueList } from '../types/value';
 
 export class ValueList<T> implements IValueList<T> {
@@ -53,3 +54,4 @@ export class ValueList<T> implements IValueList<T> {
     return new ValueList(values);
   }
 }
+*/

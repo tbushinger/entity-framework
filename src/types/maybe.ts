@@ -1,19 +1,14 @@
 import { Disposable, Serializeable, Traversable } from './common';
 
-export interface INone extends Serializeable<null>, Disposable {
-  unwrap: () => null;
-}
-export interface ISome<T> extends Serializeable<T>, Disposable {
-  unwrap: () => T;
-}
-export type MaybeInput<T> = T | null | undefined | ISome<T> | INone;
-
-export interface IMaybe<T> extends Serializeable<T>, Disposable, Traversable {
+export interface None extends Serializeable, Disposable {}
+export interface Some extends Serializeable, Disposable {}
+export interface Maybe extends Serializeable, Disposable, Traversable {
   isSome: () => boolean;
   isNone: () => boolean;
-  unwrap: () => T | null;
+  unwrap: () => Some | None;
 }
 
+/*
 export type ValueAny<T> = IMaybe<T> | IValueMap<T> | IValueList<T>;
 
 export type ValueMapValues<T> = {
@@ -36,3 +31,4 @@ export type ValueListIteratee<T> = (value: ValueAny<T>, index: number) => any;
 export interface IValueList<T> extends Serializeable<T>, Disposable {
   forEach: (iteratee: ValueListIteratee<T>) => void;
 }
+*/

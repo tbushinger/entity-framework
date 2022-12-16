@@ -1,3 +1,4 @@
+/*
 import { Maybe, ValueList, ValueMap } from '.';
 import { Path, PathSegments } from '../types/common';
 import {
@@ -85,3 +86,4 @@ export function toPath(path?: Path): Maybe<PathSegments> {
 
   return Maybe.create<PathSegments>(segmentList);
 }
+*/
